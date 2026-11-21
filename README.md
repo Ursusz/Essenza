@@ -19,8 +19,8 @@ essenza/
 │       ├── auth/           conturi, JWT, securitate
 │       └── common/         configurare, erori, utilitare
 │       (fiecare modul: controller / service / repository / domain / dto)
-│   └── src/main/resources/db/migration/   migrări Flyway
-├── web/              React + TypeScript (Vite), PWA; nginx (HTTPS 8443) în container
+│   └── src/main/resources/db/migration/   migrari Flyway
+├── web/              React + TypeScript (Vite), PWA; nginx (HTTPS 8443) in container
 ├── scan-processor/   functia Lambda (Python, PyTorch, OpenCV): calitate + embedding
 ├── ingest/           job de ingestie a catalogului (Python)
 ├── infra/
