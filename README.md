@@ -1,7 +1,7 @@
 # Essenza
 
-Aplicație web (PWA) pentru parfumuri: scanare vizuală, fișa parfumului cu scorul comunității,
-ghid anti-contrafacere, garderobă și gamification. Echipa 5, IP 2026.
+Aplicatie web (PWA) pentru parfumuri: scanare vizuala, fisa parfumului cu scorul comunitatii,
+ghid anti-contrafacere, garderoba si gamification. Echipa 5, IP 2026.
 
 ## Structura
 
@@ -9,39 +9,39 @@ ghid anti-contrafacere, garderobă și gamification. Echipa 5, IP 2026.
 essenza/
 ├── api/              Spring Boot (Java 21) — monolit modular
 │   └── src/main/java/ro/unibuc/essenza/
-│       ├── catalog/        brand, parfum, note, căutare
-│       ├── scan/           scanări, callback-ul intern, decizia de recunoaștere
-│       ├── review/         recenzii și scoruri agregate
+│       ├── catalog/        brand, parfum, note, cautare
+│       ├── scan/           scanari, callback-ul intern, decizia de recunoastere
+│       ├── review/         recenzii si scoruri agregate
 │       ├── article/        articolele influencerilor
-│       ├── wardrobe/       garderoba personală
-│       ├── authenticity/   liste de verificare, verificări, rapoarte
+│       ├── wardrobe/       garderoba personala
+│       ├── authenticity/   liste de verificare, verificari, rapoarte
 │       ├── gamification/   XP, niveluri, insigne, clasamente, misiuni, influenceri
 │       ├── auth/           conturi, JWT, securitate
 │       └── common/         configurare, erori, utilitare
 │       (fiecare modul: controller / service / repository / domain / dto)
 │   └── src/main/resources/db/migration/   migrări Flyway
 ├── web/              React + TypeScript (Vite), PWA; nginx (HTTPS 8443) în container
-├── scan-processor/   funcția Lambda (Python, PyTorch, OpenCV): calitate + embedding
+├── scan-processor/   functia Lambda (Python, PyTorch, OpenCV): calitate + embedding
 ├── ingest/           job de ingestie a catalogului (Python)
 ├── infra/
-│   ├── init/         init-aws.sh: bucket S3, funcția Lambda, notificarea S3 (Floci)
+│   ├── init/         init-aws.sh: bucket S3, functia Lambda, notificarea S3 (Floci)
 │   └── certs/        certificatele mkcert (ignorate de git)
-├── docs/             rapoartele de analiză și proiectare
+├── docs/             rapoartele de analiza si proiectare
 └── docker-compose.yml
 ```
 
 ## Pornire (PoC local)
 
-1. `cp .env.example .env` și completează valorile.
-2. Certificat HTTPS (necesar pentru cameră pe telefon):
+1. `cp .env.example .env` si completeaza valorile.
+2. Certificat HTTPS (necesar pentru camera pe telefon):
    `mkcert -cert-file infra/certs/essenza.pem -key-file infra/certs/essenza-key.pem <IP-laptop> localhost`
 3. `docker compose --profile build build scan-processor`
 4. `docker compose up -d`
 5. Ingestie catalog (la cerere): `docker compose --profile tools run --rm ingest`
 
-Aplicația: `https://<IP-laptop>:8443`.
+Aplicatia: `https://<IP>:8443`.
 
-## Dezvoltare locală
+## Dezvoltare locala
 
 - API: `cd api && mvn spring-boot:run`
 - Web: `cd web && npm install && npm run dev`
