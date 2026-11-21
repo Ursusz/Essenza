@@ -1,0 +1,12 @@
+# Jobul de ingestie a catalogului (CD-03)
+requests
+beautifulsoup4
+pandas
+psycopg[binary]
+pgvector
+boto3
+# același model ca scan-processor (aceeași model_version)
+torch
+torchvision
+open_clip_torch
+pillow

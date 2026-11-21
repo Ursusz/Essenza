@@ -1,0 +1,91 @@
+# ESSENZA - PoC local (Raport de proiectare, secțiunea 9.1)
+# Doar `web` este expus în exterior (8443, HTTPS).
+
+name: essenza
+
+services:
+  web:
+    build: ./web
+    ports:
+      - "8443:8443"
+    volumes:
+      - ./infra/certs:/etc/nginx/certs:ro
+    depends_on:
+      - api
+    networks: [essenza-net]
+
+  api:
+    build: ./api
+    env_file: .env
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      db:
+        condition: service_healthy
+      floci:
+        condition: service_started
+    networks: [essenza-net]
+
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      retries: 10
+    networks: [essenza-net]
+
+  floci:
+    image: floci/floci:latest
+    volumes:
+      - floci-data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks: [essenza-net]
+
+  # Script de pornire: bucket S3, funcția Lambda, notificarea ObjectCreated.
+  init:
+    image: amazon/aws-cli:latest
+    env_file: .env
+    entrypoint: ["/bin/sh", "/init/init-aws.sh"]
+    volumes:
+      - ./infra/init:/init:ro
+    depends_on:
+      - floci
+    networks: [essenza-net]
+
+  # Imaginea funcției Lambda; este construită aici și pornită de Floci.
+  scan-processor:
+    build: ./scan-processor
+    image: essenza/scan-processor:latest
+    profiles: ["build"]
+    volumes:
+      - model-cache:/opt/model-cache
+    networks: [essenza-net]
+
+  # Jobul de ingestie, rulat la cerere: docker compose --profile tools run --rm ingest
+  ingest:
+    build: ./ingest
+    env_file: .env
+    profiles: ["tools"]
+    volumes:
+      - model-cache:/opt/model-cache
+    depends_on:
+      - db
+      - floci
+    networks: [essenza-net]
+
+networks:
+  essenza-net:
+    name: essenza-net
+
+volumes:
+  pgdata:
+  floci-data:
+  model-cache:
