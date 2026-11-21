@@ -3,6 +3,9 @@
 Aplicatie web (PWA) pentru parfumuri: scanare vizuala, fisa parfumului cu scorul comunitatii,
 ghid anti-contrafacere, garderoba si gamification. Echipa 5, IP 2026.
 
+# Architecture
+[![Architecture diagram of ursusz/essenza](https://gitdiagram.com/ursusz/essenza/diagram.png)](https://gitdiagram.com/ursusz/essenza?utm_source=readme&utm_medium=picture)
+
 ## Structura
 
 ```
