@@ -1,0 +1,38 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: essenza-api
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/essenza}
+    username: ${SPRING_DATASOURCE_USERNAME:essenza}
+    password: ${SPRING_DATASOURCE_PASSWORD:essenza}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate   # schema este gestionată exclusiv de Flyway
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  servlet:
+    multipart:
+      max-file-size: 8MB
+      max-request-size: 8MB
+
+essenza:
+  timezone: Europe/Bucharest
+  security:
+    jwt-secret: ${JWT_SECRET:dev-only-secret}
+    internal-secret: ${INTERNAL_API_SECRET:dev-only-internal}
+  aws:
+    endpoint: ${AWS_ENDPOINT_URL:http://localhost:4566}
+    region: ${AWS_REGION:eu-central-1}
+    bucket: ${S3_BUCKET:essenza-images}
+  # Valori inițiale, Tabelul 3.1 (se calibrează pe poze de test, NF-Q02)
+  scan:
+    neighbours: 20
+    tau-high: 0.85
+    tau-low: 0.60
+    delta: 0.05
+    processing-timeout-seconds: 30
